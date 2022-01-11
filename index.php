@@ -4,31 +4,41 @@ require_once("config.php");
 
 //Carrega um usuário
 //$root = new Usuario();
-//$root->loadbyid(3);
+//$root->loadbyId(3);
 //echo $root;
 
 //Carrega uma lista de usuários
-//$list = Usuario::getList();
-//echo json_encode($list);
+//$lista = Usuario::getList();
+//echo json_encode($lista);
 
-//Carrega uma lista de usuário buscando pelo login
+//Carrega uma lista de usuários buscando pelo login
 //$search = Usuario::search("jo");
 //echo json_encode($search);
 
-//carrega um usuário usando o login e a senha
+//Carrega um usuário usando o login e a senha
 //$usuario = new Usuario();
-//$usuario->login("root" , "!@#$");
+//$usuario->login("root", "!@#$");
+
 //echo $usuario;
-// criando um novo usuário
-//$aluno = new Usuario("aluno","@lun0");
-//$aluno->insert();
-//echo $aluno;
+
+/*
+Criando um novo usuário
+$aluno = new Usuario("aluno", "@lun0");
+$aluno->insert();
+echo $aluno;
+*/
+// altera um usuário
+//$usuario = new Usuario();
+//$usuario->loadById(5);
+//$usuario->update("professor", "!@#$%¨&*");
+//echo $usuario;
 
 $usuario = new Usuario();
 
-$usuario->loadById(5);
+$usuario->loadById(4);
 
-$usuario->update("professor","!@#$");
+$usuario->delete();
 
 echo $usuario;
+
 ?>

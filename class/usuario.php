@@ -67,46 +67,51 @@ class Usuario {
 
         if (count($results) > 0) {
 
-            $this ->setData($results[0]);
+            $this->setData($results[0]);
 
         }
 
     }
 
     public static function getList(){
-       $sql = new Sql();
 
-       return $sql->select("SELECT * FROM tb_usuario ORDER BY deslogin");
+        $sql = new Sql();
+
+        return $sql->select("SELECT * FROM tb_usuario ORDER BY deslogin;");
 
     }
 
     public static function search($login){
-  
-    $sql = new Sql();
 
-    return $sql->select("SELECT *FROM tb_usuario where deslogin like :SEARCH ORDER BY deslogin",array(
-       'SEARCH'=>"%.$login.%"
-    ));
+        $sql = new Sql();
+
+        return $sql->select("SELECT * FROM tb_usuario WHERE deslogin LIKE :SEARCH ORDER BY deslogin", array(
+
+            ':SEARCH'=>"%".$login."%"
+
+        ));
 
     }
 
-    public function login($login , $password){
+    public function login($login, $password){
+
         $sql = new Sql();
 
-        $results = $sql->select("SELECT * FROM tb_usuario WHERE deslogin = :LOGIN and dessenham = :PASSWORD ", array(
+        $results = $sql->select("SELECT * FROM tb_usuario WHERE deslogin = :LOGIN AND dessenha = :PASSWORD", array(
 
-            "LOGIN"=>$login,
-            "PASSWORD"=>$password
+            ":LOGIN"=>$login,
+            ":PASSWORD"=>$password,
 
         ));
 
         if (count($results) > 0) {
 
-            $this ->setData($results[0]);
+            $this->setData($results[0]);
 
-        } else{
+        } else {
 
-            throw new Exception("Login e/ou senha invalidos.");
+            throw new Exception("Login e/ou senha inválidos.");
+
         }
 
     }
@@ -122,36 +127,57 @@ class Usuario {
 
     public function insert(){
 
-      $sql = new Sql();
+        $sql = new Sql();
 
-      $results = $sql->select("CALL sp_usuario_insert(:LOGIN, :PASSWORD)", array(
-          ':LOGIN'=>$this->getDeslogin(),
-          ':PASSWORD'=>$this->getDessenha()
-      ));
-       if(count($results)> 0){
+        $results = $sql->select("CALL sp_usuario_insert(:LOGIN, :PASSWORD)", array(
 
-        $this ->setData($results[0]);
+            ':LOGIN'=>$this->getDeslogin(),
+            ':PASSWORD'=>$this->getDessenha()
 
-       }
+        ));
+
+        if (count($results) > 0) {
+
+            $this->setData($results[0]);
+
+        }
+
     }
 
     public function update($login, $password){
 
         $this->setDeslogin($login);
         $this->setDessenha($password);
-      
+
         $sql = new Sql();
 
-        $sql->run("UPDATE tb_usuario set deslogin = :login, dessenha =:password where idusuario :ID",array(
+        $sql->run("UPDATE tb_usuario SET deslogin = :LOGIN, dessenha = :PASSWORD WHERE idusuario = :ID", array(
+
             ':LOGIN'=>$this->getDeslogin(),
             ':PASSWORD'=>$this->getDessenha(),
             ':ID'=>$this->getIdusuario()
+
         ));
 
     }
 
-    public function __construct($login = "" , $password = "") {
-        
+    public function delete(){
+
+    $sql = new Sql();
+
+    $sql->run("DELETE FROM tb_usuario WHERE idusuario :ID",array(
+        'ID'=>$this->getIdusuario(),
+    ));
+     
+       $this->setIdusuario(0);
+       $this->setDeslogin("");
+       $this->setDessenha("");
+       $this->setDtcadastro(new DateTime());
+
+    }
+
+    public function __construct($login = "", $password = ""){
+
         $this->setDeslogin($login);
         $this->setDessenha($password);
 
